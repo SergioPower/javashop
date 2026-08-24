@@ -1,3 +1,6 @@
 /workspaces/javashop/src/main/java/com/javashop/JavashopApplication.java
+/workspaces/javashop/src/main/java/com/javashop/controller/ProductoController.java
+/workspaces/javashop/src/main/java/com/javashop/dto/ProductoRequest.java
 /workspaces/javashop/src/main/java/com/javashop/entity/Producto.java
 /workspaces/javashop/src/main/java/com/javashop/repository/ProductoRepository.java
+/workspaces/javashop/src/main/java/com/javashop/service/ProductoService.java

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+
+import com.javashop.dto.ProductoRequest;
 import com.javashop.entity.Producto;
 import com.javashop.repository.ProductoRepository;
 
@@ -24,8 +26,18 @@ public class ProductoService {
         return productoRepository.findById(id);
     }
 
-    public Producto save(Producto producto) {
-        return productoRepository.save(producto);
+    public Producto save(ProductoRequest request) {
+        Producto newProducto = toEntity(request);
+        return productoRepository.save(newProducto);
+    }
+
+    public Producto toEntity(ProductoRequest request){
+        Producto producto = new Producto();
+        producto.setNombre(request.nombre());
+        producto.setDescripcion(request.descripcion());
+        producto.setPrecio(request.precio());
+        producto.setStock(request.stock());
+        return producto;
     }
 
 }
