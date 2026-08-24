@@ -9,10 +9,14 @@ import com.javashop.service.ProductoService;
 
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
@@ -27,8 +31,29 @@ public class ProductoController {
 
     @PostMapping
     public ResponseEntity<Producto> create(@RequestBody @Valid ProductoRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productoService.save(request));
+        return ResponseEntity.ok(productoService.save(request));
     }
+
+    @GetMapping
+    public ResponseEntity<List<Producto>> list() {
+        return ResponseEntity.status(HttpStatus.OK).body(productoService.findAll());
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Producto> findById(@PathVariable Long id) {
+        /* Optional<Producto> optionalProducto = productoService.findById(id);
+        if (optionalProducto.isPresent()) {
+            return ResponseEntity.ok(optionalProducto.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        } */
+
+        return productoService.findById(id)
+        .map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    
+    
     
 
 }
