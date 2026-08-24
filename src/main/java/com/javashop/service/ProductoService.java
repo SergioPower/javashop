@@ -31,6 +31,14 @@ public class ProductoService {
         return productoRepository.save(newProducto);
     }
 
+    public Producto save(Producto producto) {
+        return productoRepository.save(producto);
+    }
+
+    public void deleteById(Long id){
+        productoRepository.deleteById(id);
+    }
+
     public Producto toEntity(ProductoRequest request){
         Producto producto = new Producto();
         producto.setNombre(request.nombre());

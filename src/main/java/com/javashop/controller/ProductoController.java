@@ -10,6 +10,7 @@ import com.javashop.service.ProductoService;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+
 
 
 @RestController
@@ -52,6 +56,34 @@ public class ProductoController {
         .map(ResponseEntity::ok)
         .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> update(@PathVariable Long id, @RequestBody @Valid ProductoRequest request) {
+        Optional<Producto> optionalProducto = productoService.findById(id);
+        if (optionalProducto.isPresent()) {
+            Producto productoToUpdate = optionalProducto.get();
+            productoToUpdate.setNombre(request.nombre());
+            productoToUpdate.setDescripcion(request.descripcion());
+            productoToUpdate.setPrecio(request.precio());
+            productoToUpdate.setStock(request.stock());
+            return ResponseEntity.ok(productoService.save(productoToUpdate));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        Optional<Producto> optionalProducto = productoService.findById(id);
+        if (optionalProducto.isPresent()) {
+            productoService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+        
+    
     
     
     

@@ -1,2 +1,8 @@
+com/javashop/controller/ProductoController.class
+com/javashop/service/ProductoService.class
+com/javashop/repository/ProductoRepository.class
+com/javashop/dto/ErrorResponse.class
 com/javashop/entity/Producto.class
+com/javashop/dto/ProductoRequest.class
+com/javashop/exception/GlobalExceptionHandler.class
 com/javashop/JavashopApplication.class
