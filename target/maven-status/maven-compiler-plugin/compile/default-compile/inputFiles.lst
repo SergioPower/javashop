@@ -1,2 +1,3 @@
 /workspaces/javashop/src/main/java/com/javashop/JavashopApplication.java
 /workspaces/javashop/src/main/java/com/javashop/entity/Producto.java
+/workspaces/javashop/src/main/java/com/javashop/repository/ProductoRepository.java
