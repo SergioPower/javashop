@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.javashop.entity.Producto;
+import com.javashop.exception.ProductoNotFoundException;
 import com.javashop.service.ProductoService;
 
 @WebMvcTest(ProductoController.class)
@@ -59,4 +61,24 @@ public class ProductoControllerTest {
         // Verify
         verify(productoService, times(1)).findById(id);
     }
+
+    @Test
+    void testFindByIdProductoNoExiste() throws Exception {
+        // Arrange
+        Long id = 999L;
+
+        when(productoService.findById(id)).thenThrow(new ProductoNotFoundException(id));
+
+        //Act
+        mockMvc.perform(get("/api/productos/{id}", id))
+
+                // Assert
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Producto con id 999 no encontrado"));
+
+        // Verify
+        verify(productoService, times(1)).findById(id);
+    }
+
+    
 }
