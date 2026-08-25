@@ -1,2 +1,3 @@
 /workspaces/javashop/src/test/java/com/javashop/JavashopApplicationTests.java
+/workspaces/javashop/src/test/java/com/javashop/controller/ProductoControllerTest.java
 /workspaces/javashop/src/test/java/com/javashop/service/ProductoServiceTest.java

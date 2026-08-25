@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.javashop.JavashopApplicationTests" time="7.154" tests="1" errors="0" skipped="0" failures="0" flakes="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.javashop.controller.ProductoControllerTest" time="5.573" tests="1" errors="0" skipped="0" failures="0" flakes="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -45,7 +45,6 @@
     <property name="localRepository" value="/home/codespace/.m2/repository"/>
     <property name="java.vendor.url.bug" value="https://github.com/microsoft/openjdk/issues"/>
     <property name="java.io.tmpdir" value="/tmp"/>
-    <property name="com.zaxxer.hikari.pool_number" value="1"/>
     <property name="java.version" value="25.0.2"/>
     <property name="user.dir" value="/workspaces/javashop"/>
     <property name="os.arch" value="amd64"/>
@@ -63,12 +62,12 @@
     <property name="java.class.version" value="69.0"/>
     <property name="LOGGED_APPLICATION_NAME" value="[javashop] "/>
   </properties>
-  <testcase name="contextLoads" classname="com.javashop.JavashopApplicationTests" time="0.041">
-    <system-out><![CDATA[2026-08-25T23:43:48.515Z  INFO 50917 --- [javashop] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.javashop.JavashopApplicationTests]: JavashopApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-08-25T23:43:48.556Z  INFO 50917 --- [javashop] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.javashop.JavashopApplication for test class com.javashop.JavashopApplicationTests
-2026-08-25T23:43:48.569Z  INFO 50917 --- [javashop] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.javashop.JavashopApplicationTests]: JavashopApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-08-25T23:43:48.576Z  INFO 50917 --- [javashop] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.javashop.JavashopApplication for test class com.javashop.JavashopApplicationTests
-2026-08-25T23:43:48.591Z  INFO 50917 --- [javashop] [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+  <testcase name="testFindByIdProductoExiste" classname="com.javashop.controller.ProductoControllerTest" time="0.324">
+    <system-out><![CDATA[23:43:42.800 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.javashop.controller.ProductoControllerTest]: ProductoControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+23:43:43.047 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.javashop.JavashopApplication for test class com.javashop.controller.ProductoControllerTest
+23:43:43.050 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.javashop.controller.ProductoControllerTest]: ProductoControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+23:43:43.063 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.javashop.JavashopApplication for test class com.javashop.controller.ProductoControllerTest
+23:43:43.190 [main] INFO org.springframework.boot.devtools.restart.RestartApplicationListener -- Restart disabled due to context in which it is running
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -79,34 +78,18 @@
 
  :: Spring Boot ::                (v4.1.1)
 
-2026-08-25T23:43:48.658Z  INFO 50917 --- [javashop] [           main] com.javashop.JavashopApplicationTests    : Starting JavashopApplicationTests using Java 25.0.2 with PID 50917 (started by codespace in /workspaces/javashop)
-2026-08-25T23:43:48.659Z  INFO 50917 --- [javashop] [           main] com.javashop.JavashopApplicationTests    : No active profile set, falling back to 1 default profile: "default"
-2026-08-25T23:43:49.885Z  INFO 50917 --- [javashop] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-08-25T23:43:49.953Z  INFO 50917 --- [javashop] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 56 ms. Found 1 JPA repository interface.
-2026-08-25T23:43:50.537Z  INFO 50917 --- [javashop] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
-2026-08-25T23:43:50.677Z  INFO 50917 --- [javashop] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.5.Final
-2026-08-25T23:43:51.508Z  INFO 50917 --- [javashop] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-08-25T23:43:51.552Z  INFO 50917 --- [javashop] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-08-25T23:43:52.257Z  INFO 50917 --- [javashop] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@69b436a7
-2026-08-25T23:43:52.259Z  INFO 50917 --- [javashop] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-08-25T23:43:52.612Z  INFO 50917 --- [javashop] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [jdbc:postgresql://localhost:5432/javashop]
-	Database driver: PostgreSQL JDBC Driver
-	Database dialect: PostgreSQLDialect
-	Database version: 17.11
-	Default catalog/schema: javashop/public
-	Autocommit mode: undefined/unknown
-	Isolation level: READ_COMMITTED [default READ_COMMITTED]
-	JDBC fetch size: none
-	Pool: DataSourceConnectionProvider
-	Minimum pool size: undefined/unknown
-	Maximum pool size: undefined/unknown
-2026-08-25T23:43:53.808Z  INFO 50917 --- [javashop] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-08-25T23:43:53.979Z  INFO 50917 --- [javashop] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-08-25T23:43:54.219Z  INFO 50917 --- [javashop] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-08-25T23:43:54.640Z  WARN 50917 --- [javashop] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-08-25T23:43:55.338Z  INFO 50917 --- [javashop] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
-2026-08-25T23:43:55.413Z  INFO 50917 --- [javashop] [           main] com.javashop.JavashopApplicationTests    : Started JavashopApplicationTests in 6.823 seconds (process running for 14.18)
+2026-08-25T23:43:43.916Z  INFO 50917 --- [javashop] [           main] c.j.controller.ProductoControllerTest    : Starting ProductoControllerTest using Java 25.0.2 with PID 50917 (started by codespace in /workspaces/javashop)
+2026-08-25T23:43:43.922Z  INFO 50917 --- [javashop] [           main] c.j.controller.ProductoControllerTest    : No active profile set, falling back to 1 default profile: "default"
+2026-08-25T23:43:47.671Z  INFO 50917 --- [javashop] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-08-25T23:43:47.672Z  INFO 50917 --- [javashop] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-08-25T23:43:47.675Z  INFO 50917 --- [javashop] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-08-25T23:43:47.711Z  INFO 50917 --- [javashop] [           main] c.j.controller.ProductoControllerTest    : Started ProductoControllerTest in 4.534 seconds (process running for 6.478)
 ]]></system-out>
+    <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/home/codespace/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.11/byte-buddy-agent-1.18.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
   </testcase>
 </testsuite>
