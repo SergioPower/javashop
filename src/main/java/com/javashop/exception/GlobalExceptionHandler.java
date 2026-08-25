@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.http.HttpStatus;
 
 import com.javashop.dto.ErrorResponse;
 
@@ -14,7 +15,7 @@ import com.javashop.dto.ErrorResponse;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidarion(
+    public ResponseEntity<ErrorResponse> handleValidation(
             MethodArgumentNotValidException ex) {
 
         var errors = ex.getBindingResult().getFieldErrors();
@@ -34,5 +35,17 @@ public class GlobalExceptionHandler {
                 message);
 
         return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(ProductoNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleProductoNotFound(ProductoNotFoundException ex){
+        String message = ex.getMessage();
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                404,
+                message
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);   
     }
 }
