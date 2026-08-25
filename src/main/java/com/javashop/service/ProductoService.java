@@ -36,7 +36,8 @@ public class ProductoService {
     }
 
     public void deleteById(Long id) {
-        productoRepository.deleteById(id);
+        Producto producto = findById(id);
+        productoRepository.delete(producto);
     }
 
     public Producto update(Long id, ProductoRequest request) {
