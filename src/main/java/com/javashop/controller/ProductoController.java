@@ -60,17 +60,7 @@ public class ProductoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Producto> update(@PathVariable Long id, @RequestBody @Valid ProductoRequest request) {
-        Producto producto = productoService.findById(id);
-        if (producto.getId() > 0) {
-            Producto productoToUpdate = producto;
-            productoToUpdate.setNombre(request.nombre());
-            productoToUpdate.setDescripcion(request.descripcion());
-            productoToUpdate.setPrecio(request.precio());
-            productoToUpdate.setStock(request.stock());
-            return ResponseEntity.ok(productoService.save(productoToUpdate));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(productoService.update(id, request));
     }
 
     @DeleteMapping("/{id}")

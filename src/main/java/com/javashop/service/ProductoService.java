@@ -35,11 +35,20 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
-    public void deleteById(Long id){
+    public void deleteById(Long id) {
         productoRepository.deleteById(id);
     }
 
-    public Producto toEntity(ProductoRequest request){
+    public Producto update(Long id, ProductoRequest request) {
+        Producto productoToUpdate = findById(id);
+        productoToUpdate.setNombre(request.nombre());
+        productoToUpdate.setDescripcion(request.descripcion());
+        productoToUpdate.setPrecio(request.precio());
+        productoToUpdate.setStock(request.stock());
+        return productoRepository.save(productoToUpdate);
+    }
+
+    public Producto toEntity(ProductoRequest request) {
         Producto producto = new Producto();
         producto.setNombre(request.nombre());
         producto.setDescripcion(request.descripcion());
