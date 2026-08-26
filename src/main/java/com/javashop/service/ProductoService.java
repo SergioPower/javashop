@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.javashop.dto.ProductoRequest;
+import com.javashop.dto.ProductoResponse;
 import com.javashop.entity.Producto;
 import com.javashop.exception.ProductoNotFoundException;
 import com.javashop.repository.ProductoRepository;
@@ -18,8 +19,11 @@ public class ProductoService {
         this.productoRepository = repository;
     }
 
-    public List<Producto> findAll() {
-        return productoRepository.findAll();
+    public List<ProductoResponse> findAll() {
+        return productoRepository.findAll()
+            .stream()
+            .map(this::toResponse)
+            .toList();
     }
 
     public Producto findById(Long id) {
@@ -52,6 +56,17 @@ public class ProductoService {
         producto.setPrecio(request.precio());
         producto.setStock(request.stock());
         return producto;
+    }
+
+    public ProductoResponse toResponse(Producto producto){
+        ProductoResponse response = new ProductoResponse(
+            producto.getId(), 
+            producto.getNombre(), 
+            producto.getDescripcion(), 
+            producto.getPrecio(), 
+            producto.getStock());
+
+        return response;
     }
 
 }

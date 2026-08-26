@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.javashop.dto.ProductoRequest;
+import com.javashop.dto.ProductoResponse;
 import com.javashop.entity.Producto;
 import com.javashop.service.ProductoService;
 
@@ -36,7 +37,7 @@ public class ProductoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Producto>> list() {
+    public ResponseEntity<List<ProductoResponse>> list() {
         return ResponseEntity.status(HttpStatus.OK).body(productoService.findAll());
     }
 
