@@ -26,6 +26,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.javashop.dto.ProductoRequest;
+import com.javashop.dto.ProductoResponse;
 import com.javashop.entity.Producto;
 import com.javashop.exception.ProductoNotFoundException;
 import com.javashop.service.ProductoService;
@@ -90,16 +91,17 @@ public class ProductoControllerTest {
     @Test
     void testListObtieneListaProductos() throws Exception {
         // Arrange
-        Producto producto = new Producto();
-        producto.setId(1L);
-        producto.setNombre("Laptop Lenovo Legion 5");
-        producto.setDescripcion("Laptop para desarrollo y gaming");
-        producto.setPrecio(new BigDecimal("18500"));
-        producto.setStock(7);
+        ProductoResponse productoResponse = new ProductoResponse(
+            1L,
+            "nombre test",
+            "descripcion test",
+            new BigDecimal("100000.00"),
+            100
+        );
 
-        List<Producto> lista = Arrays.asList(producto);
+        List<ProductoResponse> listaResponse = Arrays.asList(productoResponse);
 
-        when(productoService.findAll()).thenReturn(lista);
+        when(productoService.findAll()).thenReturn(listaResponse);
 
         // Act
         mockMvc.perform(get("/api/productos"))
@@ -108,10 +110,10 @@ public class ProductoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].nombre").value("Laptop Lenovo Legion 5"))
-                .andExpect(jsonPath("$[0].descripcion").value("Laptop para desarrollo y gaming"))
-                .andExpect(jsonPath("$[0].precio").value(18500))
-                .andExpect(jsonPath("$[0].stock").value(7));
+                .andExpect(jsonPath("$[0].nombre").value("nombre test"))
+                .andExpect(jsonPath("$[0].descripcion").value("descripcion test"))
+                .andExpect(jsonPath("$[0].precio").value(100000.00))
+                .andExpect(jsonPath("$[0].stock").value(100));
 
         // Veriry
         verify(productoService, times(1)).findAll();
@@ -128,14 +130,15 @@ public class ProductoControllerTest {
                 new BigDecimal("18500"),
                 7);
 
-        Producto producto = new Producto();
-        producto.setId(1L);
-        producto.setNombre(request.nombre());
-        producto.setDescripcion(request.descripcion());
-        producto.setPrecio(request.precio());
-        producto.setStock(request.stock());
+        ProductoResponse productoResponse = new ProductoResponse(
+            1L,
+            "nombre test",
+            "descripcion test",
+            new BigDecimal("100000.00"),
+            100
+        );
 
-        when(productoService.save(request)).thenReturn(producto);
+        when(productoService.save(request)).thenReturn(productoResponse);
 
         // Act
         mockMvc.perform(post("/api/productos")
@@ -192,14 +195,15 @@ public class ProductoControllerTest {
                 new BigDecimal("10000"),
                 10);
 
-        Producto producto = new Producto();
-        producto.setId(1L);
-        producto.setNombre("nombre test");
-        producto.setDescripcion("descripcion test");
-        producto.setPrecio(new BigDecimal("10000"));
-        producto.setStock(10);
+        ProductoResponse productoResponse = new ProductoResponse(
+            1L,
+            "nombre test",
+            "descripcion test",
+            new BigDecimal("100000.00"),
+            100
+        );
 
-        when(productoService.update(id, request)).thenReturn(producto);
+        when(productoService.update(id, request)).thenReturn(productoResponse);
 
         // Act
         mockMvc.perform(put("/api/productos/{id}", id)
