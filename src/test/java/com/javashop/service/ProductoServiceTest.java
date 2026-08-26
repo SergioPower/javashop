@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,8 +19,10 @@ import com.javashop.repository.ProductoRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +34,7 @@ public class ProductoServiceTest {
     ProductoRepository productoRepository;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         productoService = new ProductoService(productoRepository);
     }
@@ -78,54 +81,69 @@ public class ProductoServiceTest {
                 .thenReturn(Optional.empty());
 
         // Act
-        ProductoNotFoundException exception = assertThrows(ProductoNotFoundException.class , () -> productoService.findById(id));
-        
-        // Assert        
+        ProductoNotFoundException exception = assertThrows(ProductoNotFoundException.class,
+                () -> productoService.findById(id));
+
+        // Assert
         String mensajeEsperado = "Producto con id 999 no encontrado";
         assertEquals(mensajeEsperado, exception.getMessage());
 
         // Verify
-        verify(productoRepository, times(1)).findById(id);
+        verify(productoRepository, times(1)).findById(anyLong());
     }
 
     @DisplayName("save() guarda correctamente.")
     @Test
     void testSave_GuardaCorrectamente() {
         // Arrange
-        Producto producto = new Producto();
-        producto.setNombre("nombre test");
-        producto.setDescripcion("descipción test");
-        producto.setPrecio(new BigDecimal("100000.00"));
-        producto.setStock(100);
+        ProductoRequest request = new ProductoRequest(
+                "nombre test",
+                "description test",
+                new BigDecimal("100000.00"),
+                100);
 
-        when(productoRepository.save(producto)).thenReturn(producto);
+        Producto productoGuardado = new Producto();
+        productoGuardado.setId(1L);
+        productoGuardado.setNombre("nombre test");
+        productoGuardado.setDescripcion("description test");
+        productoGuardado.setPrecio(new BigDecimal("100000.00"));
+        productoGuardado.setStock(100);
+
+        // Capturar el argumento
+        ArgumentCaptor<Producto> captor = ArgumentCaptor.forClass(Producto.class);
+        when(productoRepository.save(captor.capture())).thenReturn(productoGuardado);
 
         // Act
-        Producto productoGuardado = productoService.save(producto);
+        Producto resultado = productoService.save(request);
 
-        // Assert
-        assertNotNull(productoGuardado);
-        assertEquals(producto, productoGuardado);
+        // Assert - verificar el resultado
+        assertNotNull(resultado);
+        assertEquals(1L, resultado.getId());
 
-        // Verify
-        verify(productoRepository).save(producto);
-
+        // Verificar el objeto que se pasó a save
+        Producto productoEnviado = captor.getValue();
+        assertNull(productoEnviado.getId()); // Antes de guardar no tiene ID
+        assertEquals("nombre test", productoEnviado.getNombre());
+        assertEquals("description test", productoEnviado.getDescripcion());
+        assertEquals(new BigDecimal("100000.00"), productoEnviado.getPrecio());
+        assertEquals(100, productoEnviado.getStock());
     }
 
     @DisplayName("update() actualiza correctamente.")
     @Test
     void testUpdate_ActualizaCorrectamente() {
         // Arrange
-        Long id = 1L; 
-        ProductoRequest request = new ProductoRequest("nombre actualizado", "description actualizada", new BigDecimal("10.00"), 1);
-        
+        Long id = 1L;
+        ProductoRequest request = new ProductoRequest("nombre actualizado", "description actualizada",
+                new BigDecimal("10.00"), 1);
+
         Producto productoExistente = new Producto();
         productoExistente.setId(id);
         productoExistente.setNombre("nombre anterior");
         productoExistente.setDescripcion("description anterior");
         productoExistente.setPrecio(new BigDecimal("20.00"));
         productoExistente.setStock(10);
-    
+
         when(productoRepository.findById(id)).thenReturn(Optional.of(productoExistente));
 
         when(productoRepository.save(productoExistente)).thenReturn(productoExistente);
@@ -151,14 +169,15 @@ public class ProductoServiceTest {
     @Test
     void testUpdate_NoExisteProducto() {
         // Arrange
-        Long id = 999L; 
-        ProductoRequest request = new ProductoRequest("nombre actualizado", "description actualizada", new BigDecimal("10.00"), 1);
-    
+        Long id = 999L;
+        ProductoRequest request = new ProductoRequest("nombre actualizado", "description actualizada",
+                new BigDecimal("10.00"), 1);
+
         when(productoRepository.findById(id)).thenReturn(Optional.empty());
 
-
         // Act
-        ProductoNotFoundException exception = assertThrows(ProductoNotFoundException.class, () -> productoService.update(id, request));
+        ProductoNotFoundException exception = assertThrows(ProductoNotFoundException.class,
+                () -> productoService.update(id, request));
 
         // Assert
         String mensajeEsperado = "Producto con id 999 no encontrado";
@@ -188,12 +207,11 @@ public class ProductoServiceTest {
         productoService.deleteById(id);
 
         // Assert
-        
+
         // Verify
         verify(productoRepository, times(1)).findById(id);
         verify(productoRepository, times(1)).delete(producto);
     }
-
 
     @DisplayName("deleteById() cuando no existe → ProductoNotFoundException.")
     @Test
@@ -204,7 +222,8 @@ public class ProductoServiceTest {
         when(productoRepository.findById(id)).thenReturn(Optional.empty());
 
         // Act
-        ProductoNotFoundException exception = assertThrows(ProductoNotFoundException.class, () -> productoService.deleteById(id));
+        ProductoNotFoundException exception = assertThrows(ProductoNotFoundException.class,
+                () -> productoService.deleteById(id));
 
         // Assert
         String mensajeEsperado = "Producto con id 999 no encontrado";
