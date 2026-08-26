@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.javashop.dto.ProductoRequest;
 import com.javashop.dto.ProductoResponse;
-import com.javashop.entity.Producto;
 import com.javashop.service.ProductoService;
 
 import jakarta.validation.Valid;
@@ -32,17 +31,19 @@ public class ProductoController {
     }
 
     @PostMapping
-    public ResponseEntity<Producto> create(@RequestBody @Valid ProductoRequest request) {
+    public ResponseEntity<ProductoResponse> create(@RequestBody @Valid ProductoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productoService.save(request));
     }
 
     @GetMapping
     public ResponseEntity<List<ProductoResponse>> list() {
-        return ResponseEntity.status(HttpStatus.OK).body(productoService.findAll());
+        return ResponseEntity.ok(productoService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> findById(@PathVariable Long id) {
+    public ResponseEntity<ProductoResponse> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(productoService.findResponseById(id));
+
         /*
          * Optional<Producto> optionalProducto = productoService.findById(id);
          * if (optionalProducto.isPresent()) {
@@ -58,11 +59,11 @@ public class ProductoController {
          * .orElseGet(() -> ResponseEntity.notFound().build());
          */
 
-        return ResponseEntity.ok(productoService.findById(id));
+        
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> update(@PathVariable Long id, @RequestBody @Valid ProductoRequest request) {
+    public ResponseEntity<ProductoResponse> update(@PathVariable Long id, @RequestBody @Valid ProductoRequest request) {
         return ResponseEntity.ok(productoService.update(id, request));
     }
 

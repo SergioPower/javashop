@@ -30,9 +30,14 @@ public class ProductoService {
         return productoRepository.findById(id).orElseThrow(() -> new ProductoNotFoundException(id));
     }
 
-    public Producto save(ProductoRequest request) {
+    public ProductoResponse findResponseById(Long id){
+        return toResponse(findById(id));
+    }
+
+    public ProductoResponse save(ProductoRequest request) {
         Producto newProducto = toEntity(request);
-        return productoRepository.save(newProducto);
+        Producto productoGuardado = productoRepository.save(newProducto);
+        return toResponse(productoGuardado);
     }
 
     public void deleteById(Long id) {
@@ -40,13 +45,13 @@ public class ProductoService {
         productoRepository.delete(producto);
     }
 
-    public Producto update(Long id, ProductoRequest request) {
+    public ProductoResponse update(Long id, ProductoRequest request) {
         Producto productoToUpdate = findById(id);
         productoToUpdate.setNombre(request.nombre());
         productoToUpdate.setDescripcion(request.descripcion());
         productoToUpdate.setPrecio(request.precio());
         productoToUpdate.setStock(request.stock());
-        return productoRepository.save(productoToUpdate);
+        return toResponse(productoRepository.save(productoToUpdate));
     }
 
     public Producto toEntity(ProductoRequest request) {
@@ -59,14 +64,14 @@ public class ProductoService {
     }
 
     public ProductoResponse toResponse(Producto producto){
-        ProductoResponse response = new ProductoResponse(
+        return new ProductoResponse(
             producto.getId(), 
             producto.getNombre(), 
             producto.getDescripcion(), 
             producto.getPrecio(), 
             producto.getStock());
 
-        return response;
+        
     }
 
 }
