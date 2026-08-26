@@ -41,7 +41,10 @@ public class ProductoControllerTest {
     @MockitoBean
     private ProductoService productoService;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6e7f0296efe0f396342fb52d6e71ba54a5dc71e9
     @Test
     void testFindByIdProductoExiste() throws Exception {
         // Arrange
