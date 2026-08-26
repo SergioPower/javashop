@@ -2,6 +2,7 @@ package com.javashop.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.javashop.dto.ProductoRequest;
 import com.javashop.entity.Producto;
@@ -39,7 +41,6 @@ public class ProductoControllerTest {
     @MockitoBean
     private ProductoService productoService;
 
-    @DisplayName("GET /api/productos/{id} cuando existe → 200 OK")
     @Test
     void testFindByIdProductoExiste() throws Exception {
         // Arrange
@@ -85,7 +86,7 @@ public class ProductoControllerTest {
                 .andExpect(jsonPath("$.message").value("Producto con id 999 no encontrado"));
 
         // Verify
-        verify(productoService, times(1)).findById(any(Long.class));
+        verify(productoService, times(1)).findById(id);
     }
 
     @Test
@@ -120,15 +121,14 @@ public class ProductoControllerTest {
     }
 
     @Test
-    void testCreateAgregarProducto()  throws Exception{
+    void testCreateAgregarProducto() throws Exception {
 
         // Arrange
         ProductoRequest request = new ProductoRequest(
-            "Laptop Lenovo Legion 5", 
-            "Laptop para desarrollo y gaming", 
-            new BigDecimal("18500"), 
-            7
-        );
+                "Laptop Lenovo Legion 5",
+                "Laptop para desarrollo y gaming",
+                new BigDecimal("18500"),
+                7);
 
         Producto producto = new Producto();
         producto.setId(1L);
@@ -150,29 +150,49 @@ public class ProductoControllerTest {
                             "stock": 7
                         }
                         """))
-            // Assert
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.id").value(1))
-            .andExpect(jsonPath("$.nombre").value("Laptop Lenovo Legion 5"))
-            .andExpect(jsonPath("$.descripcion").value("Laptop para desarrollo y gaming"))
-            .andExpect(jsonPath("$.precio").value(18500))
-            .andExpect(jsonPath("$.stock").value(7));
-
+                // Assert
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.nombre").value("Laptop Lenovo Legion 5"))
+                .andExpect(jsonPath("$.descripcion").value("Laptop para desarrollo y gaming"))
+                .andExpect(jsonPath("$.precio").value(18500))
+                .andExpect(jsonPath("$.stock").value(7));
 
         // Veriry
-        verify(productoService , times(1)).save(any(ProductoRequest.class));
+        verify(productoService, times(1)).save(request);
     }
 
     @Test
-    void testUpdateActualizacionCorrecta() throws Exception{
+    void testCreateProductoInvalido()  throws Exception{
+        // Act
+        mockMvc.perform(post("/api/productos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                        "nombre": "",
+                        "descripcion": "inválido",
+                        "precio": null,
+                        "stock": null
+                        }
+                        """))
+            // Assert
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.message").exists());
+            
+        // Veriry
+        verify(productoService, never()).save(any(ProductoRequest.class));
+    }
+
+    @Test
+    void testUpdateActualizacionCorrecta() throws Exception {
         // Arrange
         Long id = 1L;
         ProductoRequest request = new ProductoRequest(
-            "nombre test", 
-            "descripcion test", 
-            new BigDecimal("10000"), 
-            10
-        );
+                "nombre test",
+                "descripcion test",
+                new BigDecimal("10000"),
+                10);
 
         Producto producto = new Producto();
         producto.setId(1L);
@@ -194,29 +214,28 @@ public class ProductoControllerTest {
                             "stock": 10
                         }
                         """))
-            // Assert
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(id))
-            .andExpect(jsonPath("$.nombre").value(request.nombre()))
-            .andExpect(jsonPath("$.descripcion").value(request.descripcion()))
-            .andExpect(jsonPath("$.precio").value(request.precio()))
-            .andExpect(jsonPath("$.stock").value(request.stock()));
+                // Assert
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.nombre").value(request.nombre()))
+                .andExpect(jsonPath("$.descripcion").value(request.descripcion()))
+                .andExpect(jsonPath("$.precio").value(request.precio()))
+                .andExpect(jsonPath("$.stock").value(request.stock()));
 
         // Verify
         verify(productoService, times(1)).update(id, request);
-        
+
     }
 
     @Test
-    void testUpdateProductoNoExiste() throws Exception{
+    void testUpdateProductoNoExiste() throws Exception {
         // Arrange
         Long id = 999L;
         ProductoRequest request = new ProductoRequest(
-            "nombre test", 
-            "descripcion test", 
-            new BigDecimal("10000"), 
-            10
-        );
+                "nombre test",
+                "descripcion test",
+                new BigDecimal("10000"),
+                10);
 
         when(productoService.update(id, request)).thenThrow(new ProductoNotFoundException(id));
 
@@ -230,19 +249,18 @@ public class ProductoControllerTest {
                             "precio": 10000,
                             "stock": 10
                         }
-                        """)) 
+                        """))
                 // Assert
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Producto con id 999 no encontrado"));
 
         // Verifi
-        verify(productoService, times(1)).update(any(Long.class), any(ProductoRequest.class));
+        verify(productoService, times(1)).update(id, request);
 
-        
     }
 
     @Test
-    void testDeleteEliminacionCorrecta() throws Exception{
+    void testDeleteEliminacionCorrecta() throws Exception {
         // Arrange
         Long id = 1L;
 
@@ -257,7 +275,7 @@ public class ProductoControllerTest {
     }
 
     @Test
-    void testDeleteProductoNoExiste() throws Exception{
+    void testDeleteProductoNoExiste() throws Exception {
         // Arrange
         Long id = 999L;
 
@@ -265,12 +283,12 @@ public class ProductoControllerTest {
 
         // Act
         mockMvc.perform(delete("/api/productos/{id}", id))
-                //Assert
+                // Assert
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Producto con id 999 no encontrado"));
 
-        //Verify
-                verify(productoService, times(1)).deleteById(any(Long.class));
+        // Verify
+        verify(productoService, times(1)).deleteById(id);
     }
-    
+
 }
